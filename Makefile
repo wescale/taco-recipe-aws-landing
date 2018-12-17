@@ -27,3 +27,19 @@ move_tfbackend_backend:
 
 config:
 	ansible-playbook ${TACO_HOME}/taco.yml -e tflayer=00-config -e deploy_env=sec -e deploy_region=eu-west-1 -e tfaction=apply
+
+# Accesses
+accesses-common:
+	ansible-playbook ${TACO_HOME}/taco.yml -e tflayer=02-accesses-common -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
+
+accesses-keepers: accesses-common
+	ansible-playbook ${TACO_HOME}/taco.yml -e tflayer=01-accesses-keepers -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
+
+accesses-builders:
+	ansible-playbook ${TACO_HOME}/taco.yml -vv -e tflayer=02-accesses-builders -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
+
+accesses-settlers:
+	ansible-playbook ${TACO_HOME}/taco.yml -vv -e tflayer=02-accesses-settlers -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
+
+accesses-watchers:
+	ansible-playbook ${TACO_HOME}/taco.yml -vv -e tflayer=02-accesses-watchers -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
