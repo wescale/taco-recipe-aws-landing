@@ -17,6 +17,7 @@ module "builders_base_group" {
 # -----------------------------------------------------------------------------
 # Role assumable by users, linked to root account
 # -----------------------------------------------------------------------------
+
 module "root_builders_base_role" {
   source = "../mod_role_for_users"
 
@@ -34,9 +35,9 @@ module "root_builders_base_role" {
     "${var.account_id_list["rec"]}",
   ]
 
-  run_as              = "arn:aws:iam::${var.account_id_list["root"]}:role/keepers-base"
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
   tfstate_kms_key_arn = "${var.tfstate_kms_key_arn}"
+  tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
 }
 
 # -----------------------------------------------------------------------------
@@ -45,6 +46,14 @@ module "root_builders_base_role" {
 # ARNs.
 # -----------------------------------------------------------------------------
 
+provider "aws" {
+  alias = "dev"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["dev"]}:role/keepers-base"
+  }
+}
 module "dev_builders_base_role" {
   source = "../mod_role_for_roles"
 
@@ -52,7 +61,6 @@ module "dev_builders_base_role" {
   role_name  = "base"
 
   root_account_id = "${var.account_id_list["root"]}"
-
   template = "${file("${path.module}/policies/builders_sub.json")}"
 
   allow_roles = [
@@ -61,10 +69,21 @@ module "dev_builders_base_role" {
 
   target_account_id = "${var.account_id_list["dev"]}"
 
-  run_as                 = "arn:aws:iam::${var.account_id_list["dev"]}:role/keepers-base"
   organization_role_name = "${var.organization_role_name}"
+
+  providers {
+    aws.module_local = "aws.dev"
+  }
 }
 
+provider "aws" {
+  alias = "rec"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["rec"]}:role/keepers-base"
+  }
+}
 module "rec_builders_base_role" {
   source = "../mod_role_for_roles"
 
@@ -80,6 +99,9 @@ module "rec_builders_base_role" {
 
   target_account_id = "${var.account_id_list["rec"]}"
 
-  run_as                 = "arn:aws:iam::${var.account_id_list["rec"]}:role/keepers-base"
   organization_role_name = "${var.organization_role_name}"
+
+  providers {
+    aws.module_local = "aws.rec"
+  }
 }

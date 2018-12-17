@@ -40,6 +40,8 @@ data "template_file" "managed_policy" {
     root_account_id        = "${var.root_account_id}"
     target_account_id      = "${var.target_account_id}"
     organization_role_name = "${var.organization_role_name}"
+
+    region = "${data.aws.region.region.name}"
   }
 }
 

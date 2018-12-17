@@ -39,3 +39,5 @@ provider "aws" {
 data "aws_caller_identity" "module_local" {
   provider = "aws.module_local"
 }
+
+data "aws.region" "region" {}
