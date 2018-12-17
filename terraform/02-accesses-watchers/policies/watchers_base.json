@@ -15,7 +15,7 @@
       "Effect": "Allow",
       "Action": "sts:AssumeRole",
       "Resource": [
-        ${assumable_roles}
+        "${assumable_roles}"
       ]
     }
   ]
