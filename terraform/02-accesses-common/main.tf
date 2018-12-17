@@ -27,7 +27,8 @@ resource "aws_iam_group_policy" "level_zero_user" {
         "iam:ListUserPolicies",
         "iam:ListAttachedUserPolicies",
         "iam:ListSigningCertificates",
-        "iam:ListServiceSpecificCredentials"
+        "iam:ListServiceSpecificCredentials",
+        "iam:ChangePassword"
       ],
       "Resource": "arn:aws:iam::${var.account_id_list["root"]}:user/$${aws:username}"
     },
