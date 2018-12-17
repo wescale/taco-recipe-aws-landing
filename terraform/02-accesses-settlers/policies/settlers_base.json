@@ -5,7 +5,7 @@
       "Effect": "Allow",
       "Action": "sts:AssumeRole",
       "Resource": [
-        ${assumable_roles}
+        "${assumable_roles}"
       ]
     },
     {
@@ -57,6 +57,18 @@
         "iam:GetUser"
       ],
       "Resource": "arn:aws:sts::${root_account_id}:assumed-role/settlers-base/settlers-base"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:Get*",
+        "dynamodb:List*",
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem"
+      ],
+      "Resource": [
+        "${tf_lock_dynamo_table}"
+      ]
     }
   ]
 }
