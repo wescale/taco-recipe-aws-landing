@@ -11,7 +11,7 @@
       "Resource": "*",
       "Condition": {
         "StringEquals": {
-          "ec2:Region": ["eu-west-1"]
+          "ec2:Region": ["${region}"]
         }
       }
     },
@@ -56,7 +56,7 @@
       "Resource": "*",
       "Condition": {
         "StringEquals": {
-          "ec2:Region": ["eu-west-1"]
+          "ec2:Region": ["${region}"]
         }
       }
     }
