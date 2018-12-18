@@ -36,10 +36,13 @@ accesses-keepers: accesses-common
 	ansible-playbook ${TACO_HOME}/taco.yml -e tflayer=01-accesses-keepers -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
 
 accesses-builders:
-	ansible-playbook ${TACO_HOME}/taco.yml -vv -e tflayer=02-accesses-builders -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
+	ansible-playbook ${TACO_HOME}/taco.yml -e tflayer=02-accesses-builders -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
 
 accesses-settlers:
-	ansible-playbook ${TACO_HOME}/taco.yml -vv -e tflayer=02-accesses-settlers -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
+	ansible-playbook ${TACO_HOME}/taco.yml -e tflayer=02-accesses-settlers -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
 
 accesses-watchers:
-	ansible-playbook ${TACO_HOME}/taco.yml -vv -e tflayer=02-accesses-watchers -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
+	ansible-playbook ${TACO_HOME}/taco.yml -e tflayer=02-accesses-watchers -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
+
+accesses-weavers:
+	ansible-playbook ${TACO_HOME}/taco.yml -e tflayer=02-accesses-weavers -e deploy_env=root -e deploy_region=eu-west-3 -e tfaction=apply
