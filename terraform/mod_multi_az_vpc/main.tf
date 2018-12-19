@@ -1,6 +1,4 @@
 resource "aws_vpc" "vpc" {
-  provider = "aws.module_local"
-
   cidr_block = "${var.vpc_cidr}"
 
   enable_dns_hostnames = true
@@ -19,8 +17,6 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_internet_gateway" "gateway" {
-  provider = "aws.module_local"
-
   vpc_id = "${aws_vpc.vpc.id}"
 
   tags {
@@ -37,8 +33,6 @@ resource "aws_internet_gateway" "gateway" {
 }
 
 resource "aws_route_table" "main" {
-  provider = "aws.module_local"
-
   vpc_id = "${aws_vpc.vpc.id}"
 
   tags {
@@ -55,7 +49,6 @@ resource "aws_route_table" "main" {
 }
 
 resource "aws_route" "main_to_everything" {
-  provider               = "aws.module_local"
   route_table_id         = "${aws_route_table.main.id}"
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = "${aws_internet_gateway.gateway.id}"
@@ -66,8 +59,6 @@ resource "aws_route" "main_to_everything" {
 }
 
 resource "aws_main_route_table_association" "main" {
-  provider = "aws.module_local"
-
   route_table_id = "${aws_route_table.main.id}"
   vpc_id         = "${aws_vpc.vpc.id}"
 
@@ -92,8 +83,6 @@ module "subnets_az_a" {
   private_subnet_cidr = "${cidrsubnet(var.vpc_cidr, 6, 4)}"
 
   public_gateway_route_table_id = "${aws_route_table.main.id}"
-
-  run_as = "${var.run_as}"
 }
 
 module "subnets_az_b" {
@@ -112,8 +101,6 @@ module "subnets_az_b" {
   private_subnet_cidr = "${cidrsubnet(var.vpc_cidr, 6, 6)}"
 
   public_gateway_route_table_id = "${aws_route_table.main.id}"
-
-  run_as = "${var.run_as}"
 }
 
 module "subnets_az_c" {
@@ -132,6 +119,4 @@ module "subnets_az_c" {
   private_subnet_cidr = "${cidrsubnet(var.vpc_cidr, 6, 8)}"
 
   public_gateway_route_table_id = "${aws_route_table.main.id}"
-
-  run_as = "${var.run_as}"
 }

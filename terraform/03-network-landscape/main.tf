@@ -1,3 +1,11 @@
+provider "aws" {
+  alias = "sec"
+
+  assume_role {
+    session_name = "settlers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["sec"]}:role/settlers-base"
+  }
+}
 module "sec_vpc_layout" {
   source = "../mod_multi_az_vpc"
 
@@ -10,9 +18,19 @@ module "sec_vpc_layout" {
   stack       = "network-landscape"
   cost        = "global"
 
-  run_as = "arn:aws:iam::${var.account_id_list["sec"]}:role/settlers-base"
+  providers {
+    aws = "aws.sec"
+  }
 }
 
+provider "aws" {
+  alias = "dev"
+
+  assume_role {
+    session_name = "settlers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["dev"]}:role/settlers-base"
+  }
+}
 module "dev_vpc_layout" {
   source = "../mod_multi_az_vpc"
 
@@ -25,9 +43,19 @@ module "dev_vpc_layout" {
   stack       = "network-landscape"
   cost        = "global"
 
-  run_as = "arn:aws:iam::${var.account_id_list["dev"]}:role/settlers-base"
+  providers {
+    aws = "aws.dev"
+  }
 }
 
+provider "aws" {
+  alias = "rec"
+
+  assume_role {
+    session_name = "settlers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["rec"]}:role/settlers-base"
+  }
+}
 module "rec_vpc_layout" {
   source = "../mod_multi_az_vpc"
 
@@ -39,10 +67,20 @@ module "rec_vpc_layout" {
   owner       = "settlers"
   stack       = "network-landscape"
   cost        = "global"
-
-  run_as = "arn:aws:iam::${var.account_id_list["rec"]}:role/settlers-base"
+  
+  providers {
+    aws = "aws.rec"
+  }
 }
 
+provider "aws" {
+  alias = "pil"
+
+  assume_role {
+    session_name = "settlers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["pil"]}:role/settlers-base"
+  }
+}
 module "pil_vpc_layout" {
   source = "../mod_multi_az_vpc"
 
@@ -54,10 +92,20 @@ module "pil_vpc_layout" {
   owner       = "settlers"
   stack       = "network-landscape"
   cost        = "global"
-
-  run_as = "arn:aws:iam::${var.account_id_list["pil"]}:role/settlers-base"
+  
+  providers {
+    aws = "aws.pil"
+  }
 }
 
+provider "aws" {
+  alias = "prd"
+
+  assume_role {
+    session_name = "settlers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["prd"]}:role/settlers-base"
+  }
+}
 module "prd_vpc_layout" {
   source = "../mod_multi_az_vpc"
 
@@ -69,6 +117,8 @@ module "prd_vpc_layout" {
   owner       = "settlers"
   stack       = "network-landscape"
   cost        = "global"
-
-  run_as = "arn:aws:iam::${var.account_id_list["prd"]}:role/settlers-base"
+  
+  providers {
+    aws = "aws.prd"
+  }
 }
