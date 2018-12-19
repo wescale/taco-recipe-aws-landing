@@ -74,7 +74,7 @@ module "sec_keepers_base_role" {
   ]
 
   providers {
-    aws.module_local = "aws.sec"
+    aws = "aws.sec"
   }
 }
 
@@ -111,7 +111,7 @@ module "dev_keepers_base_role" {
   target_account_id = "${var.account_id_list["dev"]}"
   
   providers {
-    aws.module_local = "aws.dev"
+    aws = "aws.dev"
   }
 }
 
@@ -143,7 +143,7 @@ module "rec_keepers_base_role" {
   target_account_id = "${var.account_id_list["rec"]}"
   
   providers {
-    aws.module_local = "aws.rec"
+    aws = "aws.rec"
   }
 }
 
@@ -175,7 +175,7 @@ module "pil_keepers_base_role" {
   target_account_id = "${var.account_id_list["pil"]}"
   
   providers {
-    aws.module_local = "aws.pil"
+    aws = "aws.pil"
   }
 }
 
@@ -207,6 +207,6 @@ module "prod_keepers_base_role" {
   target_account_id = "${var.account_id_list["prd"]}"
   
   providers {
-    aws.module_local = "aws.prod"
+    aws = "aws.prod"
   }
 }

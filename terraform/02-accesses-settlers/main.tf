@@ -74,7 +74,7 @@ module "sec_settlers_base_role" {
   organization_role_name = "${var.organization_role_name}"
 
   providers {
-    aws.module_local = "aws.sec"
+    aws = "aws.sec"
   }
 }
 
@@ -110,7 +110,7 @@ module "dev_settlers_base_role" {
   organization_role_name = "${var.organization_role_name}"
 
   providers {
-    aws.module_local = "aws.dev"
+    aws = "aws.dev"
   }
 }
 
@@ -140,7 +140,7 @@ module "rec_settlers_base_role" {
   organization_role_name = "${var.organization_role_name}"
 
   providers {
-    aws.module_local = "aws.rec"
+    aws = "aws.rec"
   }
 }
 
@@ -170,7 +170,7 @@ module "pil_settlers_base_role" {
   organization_role_name = "${var.organization_role_name}"
 
   providers {
-    aws.module_local = "aws.pil"
+    aws = "aws.pil"
   }
 }
 
@@ -200,6 +200,6 @@ module "prd_settlers_base_role" {
   organization_role_name = "${var.organization_role_name}"
 
   providers {
-    aws.module_local = "aws.prd"
+    aws = "aws.prd"
   }
 }

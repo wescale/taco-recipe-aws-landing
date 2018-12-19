@@ -65,7 +65,7 @@ module "billing_watchers_sec_role" {
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
 
   providers {
-    aws.module_local = "aws.billing_sec"
+    aws = "aws.billing_sec"
   }
 }
 
@@ -84,13 +84,12 @@ module "billing_watchers_dev_role" {
   target_account_id = "${var.account_id_list["dev"]}"
   template          = "${file("${path.module}/policies/watchers_billing.json")}"
   allow_users       = "${var.memberlist_watchers_billing}"
-  run_as            = "arn:aws:iam::${var.account_id_list["dev"]}:role/keepers-base"
 
   tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
 
   providers {
-    aws.module_local = "aws.billing_dev"
+    aws = "aws.billing_dev"
   }
 }
 
@@ -109,13 +108,12 @@ module "billing_watchers_rec_role" {
   target_account_id = "${var.account_id_list["rec"]}"
   template          = "${file("${path.module}/policies/watchers_billing.json")}"
   allow_users       = "${var.memberlist_watchers_billing}"
-  run_as            = "arn:aws:iam::${var.account_id_list["rec"]}:role/keepers-base"
 
   tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
 
   providers {
-    aws.module_local = "aws.billing_rec"
+    aws = "aws.billing_rec"
   }
 }
 
@@ -134,13 +132,12 @@ module "billing_watchers_pil_role" {
   target_account_id = "${var.account_id_list["pil"]}"
   template          = "${file("${path.module}/policies/watchers_billing.json")}"
   allow_users       = "${var.memberlist_watchers_billing}"
-  run_as            = "arn:aws:iam::${var.account_id_list["pil"]}:role/keepers-base"
 
   tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
 
   providers {
-    aws.module_local = "aws.billing_pil"
+    aws = "aws.billing_pil"
   }
 }
 
@@ -159,12 +156,11 @@ module "billing_watchers_prd_role" {
   target_account_id = "${var.account_id_list["prd"]}"
   template          = "${file("${path.module}/policies/watchers_billing.json")}"
   allow_users       = "${var.memberlist_watchers_billing}"
-  run_as            = "arn:aws:iam::${var.account_id_list["prd"]}:role/keepers-base"
 
   tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
 
   providers {
-    aws.module_local = "aws.billing_prd"
+    aws = "aws.billing_prd"
   }
 }

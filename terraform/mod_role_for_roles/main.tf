@@ -8,8 +8,6 @@ locals {
 }
 
 resource "aws_iam_role" "managed_role" {
-  provider = "aws.module_local"
-
   name = "${var.group_name}-${var.role_name}"
 
   assume_role_policy = <<EOF
@@ -46,8 +44,6 @@ data "template_file" "managed_policy" {
 }
 
 resource "aws_iam_role_policy" "managed_role_policy_association" {
-  provider = "aws.module_local"
-
   name   = "${var.group_name}-${var.role_name}-policy"
   role   = "${aws_iam_role.managed_role.id}"
   policy = "${data.template_file.managed_policy.rendered}"

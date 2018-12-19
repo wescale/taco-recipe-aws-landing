@@ -72,7 +72,7 @@ module "dev_builders_base_role" {
   organization_role_name = "${var.organization_role_name}"
 
   providers {
-    aws.module_local = "aws.dev"
+    aws = "aws.dev"
   }
 }
 
@@ -102,6 +102,6 @@ module "rec_builders_base_role" {
   organization_role_name = "${var.organization_role_name}"
 
   providers {
-    aws.module_local = "aws.rec"
+    aws = "aws.rec"
   }
 }

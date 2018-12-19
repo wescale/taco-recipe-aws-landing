@@ -73,7 +73,7 @@ module "pil_weavers_base_role" {
   organization_role_name = "${var.organization_role_name}"
 
   providers {
-    aws.module_local = "aws.pil"
+    aws = "aws.pil"
   }
 }
 
@@ -104,6 +104,6 @@ module "prd_weavers_base_role" {
   organization_role_name = "${var.organization_role_name}"
 
   providers {
-    aws.module_local = "aws.prd"
+    aws = "aws.prd"
   }
 }

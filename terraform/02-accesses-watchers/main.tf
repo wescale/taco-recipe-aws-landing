@@ -69,7 +69,7 @@ module "root_watchers_sec_role" {
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
 
   providers {
-    aws.module_local = "aws.sec"
+    aws = "aws.sec"
   }
 }
 
@@ -97,7 +97,7 @@ module "root_watchers_dev_role" {
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
 
   providers {
-    aws.module_local = "aws.dev"
+    aws = "aws.dev"
   }
 }
 
@@ -125,7 +125,7 @@ module "root_watchers_rec_role" {
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
 
   providers {
-    aws.module_local = "aws.rec"
+    aws = "aws.rec"
   }
 }
 
@@ -153,7 +153,7 @@ module "root_watchers_pil_role" {
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
 
   providers {
-    aws.module_local = "aws.pil"
+    aws = "aws.pil"
   }
 }
 
@@ -181,6 +181,6 @@ module "root_watchers_prod_role" {
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
 
   providers {
-    aws.module_local = "aws.prd"
+    aws = "aws.prd"
   }
 }
