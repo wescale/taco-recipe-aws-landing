@@ -1,10 +1,27 @@
+provider "aws" {
+  alias = "deploy_env"
+
+  assume_role {
+    session_name = "deploy_env"
+    role_arn = "arn:aws:iam::${var.account_id_list[var.deploy_env]}:role/settlers-base"
+  }
+}
+
 # -----------------------------------------------------------------------------
+provider "aws" {
+  alias = "dev"
+
+  assume_role {
+    session_name = "settlers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["dev"]}:role/settlers-base"
+  }
+}
+
 module "dev_vpc_peering" {
   source = "../mod_vpc_peering"
 
   deploy_region = "${var.deploy_region}"
 
-  requester_account_id = "${var.account_id_list[var.deploy_env]}"
   requester_vpc_id     = "${data.terraform_remote_state.landscape.vpcs_ids[var.deploy_env]}"
   requester_env        = "${var.deploy_env}"
   requester_cidr_block = "${data.terraform_remote_state.landscape.vpcs_cidrs[var.deploy_env]}"
@@ -27,15 +44,25 @@ module "dev_vpc_peering" {
   accepter_cidr_block       = "${data.terraform_remote_state.landscape.vpcs_cidrs["dev"]}"
   accepter_env              = "dev"
 
-  run_as = "arn:aws:iam::${var.account_id_list["dev"]}:role/settlers-base"
+  providers {
+    aws = "aws.deploy_env"
+    aws.accepter = "aws.dev"
+  }
+}
+
+provider "aws" {
+  alias = "rec"
+
+  assume_role {
+    session_name = "settlers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["rec"]}:role/settlers-base"
+
+  }
 }
 
 module "rec_vpc_peering" {
   source = "../mod_vpc_peering"
 
-  deploy_region = "${var.deploy_region}"
-
-  requester_account_id = "${var.account_id_list[var.deploy_env]}"
   requester_vpc_id     = "${data.terraform_remote_state.landscape.vpcs_ids[var.deploy_env]}"
   requester_env        = "${var.deploy_env}"
   requester_cidr_block = "${data.terraform_remote_state.landscape.vpcs_cidrs[var.deploy_env]}"
@@ -58,7 +85,20 @@ module "rec_vpc_peering" {
   accepter_cidr_block       = "${data.terraform_remote_state.landscape.vpcs_cidrs["rec"]}"
   accepter_env              = "rec"
 
-  run_as = "arn:aws:iam::${var.account_id_list["rec"]}:role/settlers-base"
+  providers {
+    aws = "aws.deploy_env"
+    aws.accepter = "aws.rec"
+  }
+}
+
+provider "aws" {
+  alias = "pil"
+
+  assume_role {
+    session_name = "settlers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["pil"]}:role/settlers-base"
+
+  }
 }
 
 module "pil_vpc_peering" {
@@ -66,7 +106,6 @@ module "pil_vpc_peering" {
 
   deploy_region = "${var.deploy_region}"
 
-  requester_account_id = "${var.account_id_list[var.deploy_env]}"
   requester_vpc_id     = "${data.terraform_remote_state.landscape.vpcs_ids[var.deploy_env]}"
   requester_env        = "${var.deploy_env}"
   requester_cidr_block = "${data.terraform_remote_state.landscape.vpcs_cidrs[var.deploy_env]}"
@@ -89,7 +128,20 @@ module "pil_vpc_peering" {
   accepter_cidr_block       = "${data.terraform_remote_state.landscape.vpcs_cidrs["pil"]}"
   accepter_env              = "pil"
 
-  run_as = "arn:aws:iam::${var.account_id_list["pil"]}:role/settlers-base"
+  providers  {
+    aws = "aws.deploy_env"
+    aws.accepter = "aws.pil"
+  }
+}
+
+provider "aws" {
+  alias = "prd"
+
+  assume_role {
+    session_name = "settlers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["prd"]}:role/settlers-base"
+
+  }
 }
 
 module "prd_vpc_peering" {
@@ -97,7 +149,6 @@ module "prd_vpc_peering" {
 
   deploy_region = "${var.deploy_region}"
 
-  requester_account_id = "${var.account_id_list[var.deploy_env]}"
   requester_vpc_id     = "${data.terraform_remote_state.landscape.vpcs_ids[var.deploy_env]}"
   requester_env        = "${var.deploy_env}"
   requester_cidr_block = "${data.terraform_remote_state.landscape.vpcs_cidrs[var.deploy_env]}"
@@ -120,5 +171,8 @@ module "prd_vpc_peering" {
   accepter_cidr_block       = "${data.terraform_remote_state.landscape.vpcs_cidrs["prd"]}"
   accepter_env              = "prd"
 
-  run_as = "arn:aws:iam::${var.account_id_list["prd"]}:role/settlers-base"
+  providers {
+    aws = "aws.deploy_env"
+    aws.accepter = "aws.prd"
+  }
 }

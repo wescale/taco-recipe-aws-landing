@@ -2,10 +2,9 @@
 # Make request
 ###############################################################################
 resource "aws_vpc_peering_connection" "peer" {
-  provider      = "aws.requester"
   vpc_id        = "${var.requester_vpc_id}"
   peer_vpc_id   = "${var.accepter_vpc_id}"
-  peer_owner_id = "${var.accepter_account_id}"
+  peer_owner_id = "${data.aws_caller_identity.accepter.account_id}"
   auto_accept   = false
 
   tags {
@@ -53,8 +52,6 @@ resource "aws_route" "accepter_private_subnets_to_requester_global" {
 }
 
 resource "aws_route" "requester_private_subnets_route_to_acceper_global" {
-  provider = "aws.requester"
-
   count = "${length(var.requester_private_route_table_list)}"
 
   route_table_id            = "${var.requester_private_route_table_list[count.index]}"
