@@ -37,10 +37,9 @@ module "root_settlers_base_role" {
     "${var.account_id_list["prd"]}",
   ]
 
-  run_as = "arn:aws:iam::${var.account_id_list["root"]}:role/keepers-base"
-
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
   tfstate_kms_key_arn = "${var.tfstate_kms_key_arn}"
+  tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
 }
 
 # -----------------------------------------------------------------------------
@@ -48,6 +47,15 @@ module "root_settlers_base_role" {
 # root_account_id is used to mix with allow_roles names to generate assumed role
 # ARNs.
 # -----------------------------------------------------------------------------
+
+provider "aws" {
+  alias = "sec"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn     = "arn:aws:iam::${var.account_id_list["sec"]}:role/keepers-base"
+  }
+}
 module "sec_settlers_base_role" {
   source = "../mod_role_for_roles"
 
@@ -63,8 +71,11 @@ module "sec_settlers_base_role" {
   ]
 
   target_account_id      = "${var.account_id_list["sec"]}"
-  run_as                 = "arn:aws:iam::${var.account_id_list["sec"]}:role/keepers-base"
   organization_role_name = "${var.organization_role_name}"
+
+  providers {
+    aws = "aws.sec"
+  }
 }
 
 # -----------------------------------------------------------------------------
@@ -72,6 +83,15 @@ module "sec_settlers_base_role" {
 # root_account_id is used to mix with allow_roles names to generate assumed role
 # ARNs.
 # -----------------------------------------------------------------------------
+
+provider "aws" {
+  alias = "dev"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn     = "arn:aws:iam::${var.account_id_list["dev"]}:role/keepers-base"
+  }
+}
 module "dev_settlers_base_role" {
   source = "../mod_role_for_roles"
 
@@ -87,10 +107,21 @@ module "dev_settlers_base_role" {
   ]
 
   target_account_id      = "${var.account_id_list["dev"]}"
-  run_as                 = "arn:aws:iam::${var.account_id_list["dev"]}:role/keepers-base"
   organization_role_name = "${var.organization_role_name}"
+
+  providers {
+    aws = "aws.dev"
+  }
 }
 
+provider "aws" {
+  alias = "rec"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn     = "arn:aws:iam::${var.account_id_list["rec"]}:role/keepers-base"
+  }
+}
 module "rec_settlers_base_role" {
   source = "../mod_role_for_roles"
 
@@ -106,10 +137,21 @@ module "rec_settlers_base_role" {
   ]
 
   target_account_id      = "${var.account_id_list["rec"]}"
-  run_as                 = "arn:aws:iam::${var.account_id_list["rec"]}:role/keepers-base"
   organization_role_name = "${var.organization_role_name}"
+
+  providers {
+    aws = "aws.rec"
+  }
 }
 
+provider "aws" {
+  alias = "pil"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn     = "arn:aws:iam::${var.account_id_list["pil"]}:role/keepers-base"
+  }
+}
 module "pil_settlers_base_role" {
   source = "../mod_role_for_roles"
 
@@ -125,10 +167,21 @@ module "pil_settlers_base_role" {
   ]
 
   target_account_id      = "${var.account_id_list["pil"]}"
-  run_as                 = "arn:aws:iam::${var.account_id_list["pil"]}:role/keepers-base"
   organization_role_name = "${var.organization_role_name}"
+
+  providers {
+    aws = "aws.pil"
+  }
 }
 
+provider "aws" {
+  alias = "prd"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn     = "arn:aws:iam::${var.account_id_list["prd"]}:role/keepers-base"
+  }
+}
 module "prd_settlers_base_role" {
   source = "../mod_role_for_roles"
 
@@ -144,6 +197,9 @@ module "prd_settlers_base_role" {
   ]
 
   target_account_id      = "${var.account_id_list["prd"]}"
-  run_as                 = "arn:aws:iam::${var.account_id_list["prd"]}:role/keepers-base"
   organization_role_name = "${var.organization_role_name}"
+
+  providers {
+    aws = "aws.prd"
+  }
 }

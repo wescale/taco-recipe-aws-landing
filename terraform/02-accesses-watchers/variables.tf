@@ -20,3 +20,7 @@ variable "memberlist_watchers_audit" {
 variable "tfstate_bucket_name" {
   type = "string"
 }
+
+variable "tf_lock_dynamo_table" {
+  type = "string"
+}

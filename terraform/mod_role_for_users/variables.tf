@@ -36,14 +36,3 @@ variable "allow_assume_prefixed_roles_in_accounts" {
   type    = "list"
   default = []
 }
-
-variable "run_as" {}
-
-provider "aws" {
-  alias = "module_local"
-
-  assume_role {
-    session_name = "module_local"
-    role_arn     = "${var.run_as}"
-  }
-}

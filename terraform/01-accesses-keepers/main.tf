@@ -26,6 +26,8 @@ module "root_keepers_base_role" {
   root_account_id   = "${var.account_id_list["root"]}"
   target_account_id = "${var.account_id_list["root"]}"
 
+  tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
+
   template    = "${file("${path.module}/policies/keepers_base.json")}"
   allow_users = "${var.memberlist_keepers_base}"
 
@@ -38,8 +40,6 @@ module "root_keepers_base_role" {
   allow_assume_prefixed_roles_in_accounts = [
     "${values(var.account_id_list)}",
   ]
-
-  run_as = "arn:aws:iam::${var.account_id_list["root"]}:role/${var.run_as}"
 }
 
 # -----------------------------------------------------------------------------
@@ -47,6 +47,15 @@ module "root_keepers_base_role" {
 # root_account_id is used to mix with allow_roles names to generate assumed role
 # ARNs.
 # -----------------------------------------------------------------------------
+provider "aws" {
+  alias = "sec"
+
+  assume_role {
+    session_name = "admin"
+    role_arn = "arn:aws:iam::${var.account_id_list["sec"]}:role/${var.run_as}"
+  }
+}
+
 module "sec_keepers_base_role" {
   source = "../mod_role_for_roles"
 
@@ -64,7 +73,9 @@ module "sec_keepers_base_role" {
     "${module.root_keepers_base_role.role_name}",
   ]
 
-  run_as = "arn:aws:iam::${var.account_id_list["sec"]}:role/${var.run_as}"
+  providers {
+    aws = "aws.sec"
+  }
 }
 
 # -----------------------------------------------------------------------------
@@ -72,6 +83,15 @@ module "sec_keepers_base_role" {
 # root_account_id is used to mix with allow_roles names to generate assumed role
 # ARNs.
 # -----------------------------------------------------------------------------
+provider "aws" {
+  alias = "dev"
+
+  assume_role {
+    session_name = "admin"
+    role_arn = "arn:aws:iam::${var.account_id_list["dev"]}:role/${var.run_as}"
+  }
+}
+
 module "dev_keepers_base_role" {
   source = "../mod_role_for_roles"
 
@@ -89,7 +109,19 @@ module "dev_keepers_base_role" {
   ]
 
   target_account_id = "${var.account_id_list["dev"]}"
-  run_as            = "arn:aws:iam::${var.account_id_list["dev"]}:role/${var.run_as}"
+  
+  providers {
+    aws = "aws.dev"
+  }
+}
+
+provider "aws" {
+  alias = "rec"
+
+  assume_role {
+    session_name = "admin"
+    role_arn = "arn:aws:iam::${var.account_id_list["rec"]}:role/${var.run_as}"
+  }
 }
 
 module "rec_keepers_base_role" {
@@ -109,7 +141,19 @@ module "rec_keepers_base_role" {
   ]
 
   target_account_id = "${var.account_id_list["rec"]}"
-  run_as            = "arn:aws:iam::${var.account_id_list["rec"]}:role/${var.run_as}"
+  
+  providers {
+    aws = "aws.rec"
+  }
+}
+
+provider "aws" {
+  alias = "pil"
+
+  assume_role {
+    session_name = "admin"
+    role_arn = "arn:aws:iam::${var.account_id_list["pil"]}:role/${var.run_as}"
+  }
 }
 
 module "pil_keepers_base_role" {
@@ -129,7 +173,19 @@ module "pil_keepers_base_role" {
   ]
 
   target_account_id = "${var.account_id_list["pil"]}"
-  run_as            = "arn:aws:iam::${var.account_id_list["pil"]}:role/${var.run_as}"
+  
+  providers {
+    aws = "aws.pil"
+  }
+}
+
+provider "aws" {
+  alias = "prod"
+
+  assume_role {
+    session_name = "admin"
+    role_arn = "arn:aws:iam::${var.account_id_list["prd"]}:role/${var.run_as}"
+  }
 }
 
 module "prod_keepers_base_role" {
@@ -149,5 +205,8 @@ module "prod_keepers_base_role" {
   ]
 
   target_account_id = "${var.account_id_list["prd"]}"
-  run_as            = "arn:aws:iam::${var.account_id_list["prd"]}:role/${var.run_as}"
+  
+  providers {
+    aws = "aws.prod"
+  }
 }

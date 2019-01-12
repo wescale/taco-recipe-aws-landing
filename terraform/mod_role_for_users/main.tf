@@ -3,8 +3,6 @@ locals {
 }
 
 resource "aws_iam_role" "managed_role" {
-  provider = "aws.module_local"
-
   name = "${var.group_name}-${var.role_name}"
 
   assume_role_policy = <<EOF
@@ -43,13 +41,11 @@ data "template_file" "managed_policy" {
     tfstate_bucket_name    = "${var.tfstate_bucket_name}"
     tfstate_kms_key_arn    = "${var.tfstate_kms_key_arn}"
 
-    assumable_roles = "${join(",",formatlist("\"arn:aws:iam::%s:role/%s-%s\"", var.allow_assume_prefixed_roles_in_accounts, var.group_name, var.role_name))}"
+    assumable_roles = "${join("\",\"",formatlist("arn:aws:iam::%s:role/%s-%s", var.allow_assume_prefixed_roles_in_accounts, var.group_name, var.role_name))}"
   }
 }
 
 resource "aws_iam_role_policy" "managed_role_policy_association" {
-  provider = "aws.module_local"
-
   name   = "${var.group_name}-${var.role_name}-policy"
   role   = "${aws_iam_role.managed_role.id}"
   policy = "${data.template_file.managed_policy.rendered}"

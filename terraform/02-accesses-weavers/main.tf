@@ -34,11 +34,10 @@ module "root_weavers_base_role" {
     "${var.account_id_list["prd"]}",
   ]
 
+  tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
+
   tfstate_bucket_name = "${var.tfstate_bucket_name}"
-
   tfstate_kms_key_arn = "${var.tfstate_kms_key_arn}"
-
-  run_as = "arn:aws:iam::${var.account_id_list["root"]}:role/keepers-base"
 }
 
 # -----------------------------------------------------------------------------
@@ -47,6 +46,14 @@ module "root_weavers_base_role" {
 # ARNs.
 # -----------------------------------------------------------------------------
 
+provider "aws" {
+  alias = "pil"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["pil"]}:role/keepers-base"
+  }
+}
 module "pil_weavers_base_role" {
   source = "../mod_role_for_roles"
 
@@ -63,11 +70,21 @@ module "pil_weavers_base_role" {
 
   target_account_id = "${var.account_id_list["pil"]}"
 
-  run_as = "arn:aws:iam::${var.account_id_list["pil"]}:role/keepers-base"
-
   organization_role_name = "${var.organization_role_name}"
+
+  providers {
+    aws = "aws.pil"
+  }
 }
 
+provider "aws" {
+  alias = "prd"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["prd"]}:role/keepers-base"
+  }
+}
 module "prd_weavers_base_role" {
   source = "../mod_role_for_roles"
 
@@ -85,5 +102,8 @@ module "prd_weavers_base_role" {
   target_account_id = "${var.account_id_list["prd"]}"
 
   organization_role_name = "${var.organization_role_name}"
-  run_as                 = "arn:aws:iam::${var.account_id_list["prd"]}:role/keepers-base"
+
+  providers {
+    aws = "aws.prd"
+  }
 }

@@ -26,3 +26,7 @@ variable "tfstate_bucket_name" {
 variable "tfstate_kms_key_arn" {
   type = "string"
 }
+
+variable "tf_lock_dynamo_table" {
+  type = "string"
+}

@@ -26,7 +26,7 @@
       "Effect": "Allow",
       "Action": "sts:AssumeRole",
       "Resource": [
-        ${assumable_roles}
+        "${assumable_roles}"
       ]
     },
     {
@@ -49,6 +49,18 @@
         "s3:DeleteObject"
       ],
       "Resource": "arn:aws:s3:::${tfstate_bucket_name}/tflayers/04-*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:Get*",
+        "dynamodb:List*",
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem"
+      ],
+      "Resource": [
+        "${tf_lock_dynamo_table}"
+      ]
     }
   ]
 }

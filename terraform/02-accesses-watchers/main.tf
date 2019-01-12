@@ -28,6 +28,8 @@ module "root_watchers_base_role" {
 
   template    = "${file("${path.module}/policies/watchers_base.json")}"
   allow_users = "${var.memberlist_watchers_base}"
+  tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
+  tfstate_bucket_name = "${var.tfstate_bucket_name}"
 
   allow_assume_prefixed_roles_in_accounts = [
     "${var.account_id_list["sec"]}",
@@ -36,10 +38,6 @@ module "root_watchers_base_role" {
     "${var.account_id_list["pil"]}",
     "${var.account_id_list["prd"]}",
   ]
-
-  tfstate_bucket_name = "${var.tfstate_bucket_name}"
-
-  run_as = "arn:aws:iam::${var.account_id_list["root"]}:role/keepers-base"
 }
 
 # -----------------------------------------------------------------------------
@@ -47,6 +45,14 @@ module "root_watchers_base_role" {
 # root_account_id is used to mix with allow_roles names to generate assumed role
 # ARNs.
 # -----------------------------------------------------------------------------
+provider "aws" {
+  alias = "sec"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn = "arn:aws:iam::${var.account_id_list["sec"]}:role/keepers-base"
+  }
+}
 module "root_watchers_sec_role" {
   source = "../mod_role_for_users"
 
@@ -59,9 +65,22 @@ module "root_watchers_sec_role" {
   template    = "${file("${path.module}/policies/watchers_sub.json")}"
   allow_users = "${var.memberlist_watchers_base}"
 
-  run_as = "arn:aws:iam::${var.account_id_list["sec"]}:role/keepers-base"
+  tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
+  tfstate_bucket_name = "${var.tfstate_bucket_name}"
+
+  providers {
+    aws = "aws.sec"
+  }
 }
 
+provider "aws" {
+  alias = "dev"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn     = "arn:aws:iam::${var.account_id_list["dev"]}:role/keepers-base"
+  }
+}
 module "root_watchers_dev_role" {
   source = "../mod_role_for_users"
 
@@ -74,10 +93,23 @@ module "root_watchers_dev_role" {
   template    = "${file("${path.module}/policies/watchers_sub.json")}"
   allow_users = "${var.memberlist_watchers_base}"
 
-  run_as = "arn:aws:iam::${var.account_id_list["dev"]}:role/keepers-base"
+  tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
+  tfstate_bucket_name = "${var.tfstate_bucket_name}"
+
+  providers {
+    aws = "aws.dev"
+  }
 }
 
-module "root_watchers_uat_role" {
+provider "aws" {
+  alias = "rec"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn     = "arn:aws:iam::${var.account_id_list["rec"]}:role/keepers-base"
+  }
+}
+module "root_watchers_rec_role" {
   source = "../mod_role_for_users"
 
   group_name = "watchers"
@@ -89,10 +121,23 @@ module "root_watchers_uat_role" {
   template    = "${file("${path.module}/policies/watchers_sub.json")}"
   allow_users = "${var.memberlist_watchers_base}"
 
-  run_as = "arn:aws:iam::${var.account_id_list["rec"]}:role/keepers-base"
+  tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
+  tfstate_bucket_name = "${var.tfstate_bucket_name}"
+
+  providers {
+    aws = "aws.rec"
+  }
 }
 
-module "root_watchers_pre_role" {
+provider "aws" {
+  alias = "pil"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn     = "arn:aws:iam::${var.account_id_list["pil"]}:role/keepers-base"
+  }
+}
+module "root_watchers_pil_role" {
   source = "../mod_role_for_users"
 
   group_name = "watchers"
@@ -104,9 +149,22 @@ module "root_watchers_pre_role" {
   template    = "${file("${path.module}/policies/watchers_sub.json")}"
   allow_users = "${var.memberlist_watchers_base}"
 
-  run_as = "arn:aws:iam::${var.account_id_list["pil"]}:role/keepers-base"
+  tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
+  tfstate_bucket_name = "${var.tfstate_bucket_name}"
+
+  providers {
+    aws = "aws.pil"
+  }
 }
 
+provider "aws" {
+  alias = "prd"
+
+  assume_role {
+    session_name = "keepers-base"
+    role_arn     = "arn:aws:iam::${var.account_id_list["prd"]}:role/keepers-base"
+  }
+}
 module "root_watchers_prod_role" {
   source = "../mod_role_for_users"
 
@@ -119,5 +177,10 @@ module "root_watchers_prod_role" {
   template    = "${file("${path.module}/policies/watchers_sub.json")}"
   allow_users = "${var.memberlist_watchers_base}"
 
-  run_as = "arn:aws:iam::${var.account_id_list["prd"]}:role/keepers-base"
+  tf_lock_dynamo_table = "${var.tf_lock_dynamo_table}"
+  tfstate_bucket_name = "${var.tfstate_bucket_name}"
+
+  providers {
+    aws = "aws.prd"
+  }
 }

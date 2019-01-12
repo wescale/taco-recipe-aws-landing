@@ -2,8 +2,6 @@
 # PUBLIC SUBNET
 ###############################################################################
 resource "aws_subnet" "public_subnet" {
-  provider = "aws.module_local"
-
   vpc_id = "${var.vpc_id}"
 
   cidr_block = "${var.public_subnet_cidr}"
@@ -27,8 +25,6 @@ resource "aws_subnet" "public_subnet" {
 # Associating public subnet to VPC main route table
 # -------------------------------------
 resource "aws_route_table_association" "public_subnet_to_gateway" {
-  provider = "aws.module_local"
-
   subnet_id = "${aws_subnet.public_subnet.id}"
 
   route_table_id = "${var.public_gateway_route_table_id}"
@@ -42,8 +38,6 @@ resource "aws_route_table_association" "public_subnet_to_gateway" {
 # PRIVATE SUBNET
 ###############################################################################
 resource "aws_subnet" "private_subnet" {
-  provider = "aws.module_local"
-
   vpc_id = "${var.vpc_id}"
 
   cidr_block = "${var.private_subnet_cidr}"
@@ -67,8 +61,6 @@ resource "aws_subnet" "private_subnet" {
 # Private subnet own route table
 # -------------------------------------
 resource "aws_route_table" "private_subnet_route" {
-  provider = "aws.module_local"
-
   vpc_id = "${var.vpc_id}"
 
   tags {
@@ -88,7 +80,6 @@ resource "aws_route_table" "private_subnet_route" {
 # Associating private subnet to its own route table.
 # -------------------------------------
 resource "aws_route_table_association" "private_subnet_to_nat" {
-  provider       = "aws.module_local"
   subnet_id      = "${aws_subnet.private_subnet.id}"
   route_table_id = "${aws_route_table.private_subnet_route.id}"
 
